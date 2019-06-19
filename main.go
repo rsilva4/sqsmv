@@ -14,6 +14,7 @@ import (
 func main() {
 	src := flag.String("src", "", "source queue")
 	dest := flag.String("dest", "", "destination queue")
+	nummsgs := flag.Int("nummsgs", 100, "number of messages to move")
 	flag.Parse()
 
 	if *src == "" || *dest == "" {
@@ -49,7 +50,8 @@ func main() {
 
 	lastMessageCount := int(1)
 	// loop as long as there are messages on the queue
-	for {
+	i := 0
+	for i < nummsgs {
 		resp, err := client.ReceiveMessage(rmin)
 
 		if err != nil {
@@ -63,6 +65,7 @@ func main() {
 		}
 
 		lastMessageCount = len(resp.Messages);
+		
 		log.Printf("received %v messages...", len(resp.Messages))
 
 		var wg sync.WaitGroup
@@ -102,5 +105,6 @@ func main() {
 
 		// wait for all jobs from this batch...
 		wg.Wait()
+		i+=lastMessageCount
 	}
 }
