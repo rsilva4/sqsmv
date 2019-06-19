@@ -51,7 +51,7 @@ func main() {
 	lastMessageCount := int(1)
 	// loop as long as there are messages on the queue
 	i := 0
-	for i < nummsgs {
+	for i < *nummsgs {
 		resp, err := client.ReceiveMessage(rmin)
 
 		if err != nil {
